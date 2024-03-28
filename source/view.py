@@ -15,7 +15,6 @@ from source.controller import Controller  # Importamos el controlador
 #-----------------------------------------
 # CLASES PARA INTERFACES VIEW.PY
 #-----------------------------------------
-
 class View(QMainWindow):
     def __init__(self):
         # Constructor de la clase View
