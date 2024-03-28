@@ -1,5 +1,5 @@
 # Data Visualization Interface
-This repository contains the source code to develop a customized data visualization interface for Palmex. The interface is designed to offer an intuitive and efficient experience for interpreting data relevant to the business.
+This repository contains the source code for developing a customized data visualization interface. The interface is designed to provide an intuitive and efficient experience for interpreting data relevant to the ongoing project.
 
 ## Key Features
 
