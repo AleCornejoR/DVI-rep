@@ -11,7 +11,6 @@ from source.model import Model  # Importa la clase Model desde model.py
 #-----------------------------------------
 # CLASES PARA CONTROLADOR CONTROLLER.PY
 #-----------------------------------------
-
 class Controller:
     def __init__(self, view):
         # Constructor de la clase Controller.
