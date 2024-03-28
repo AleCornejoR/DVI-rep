@@ -9,7 +9,7 @@ La clase Interface se encarga de crear una instancia de la clase View y del cont
 #-----------------------------------------
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QLineEdit, QPushButton
 from PyQt6.QtGui import QIcon  # Importa la clase QIcon desde PyQt6.QtGui
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSize
 from source.controller import Controller  # Importamos el controlador
 
 #-----------------------------------------
@@ -73,6 +73,11 @@ class View(QMainWindow):
     def setupSearchButton(self):
         # Configura el botón de búsqueda
         self.search_button = QPushButton("Search")  # Crea un botón de búsqueda con el texto "Search"
+
+        # Añade un icono al botón
+        search_icon = QIcon("resources/images/icono busqueda.png")  # Reemplaza "ruta/al/icono.png" con la ruta de tu icono
+        self.search_button.setIcon(search_icon)
+
         # Definimos el estilo del botón con esquinas redondeadas
         self.search_button.setStyleSheet(
             """
@@ -92,6 +97,7 @@ class View(QMainWindow):
             }
             """
         )
+
         self.vertical_layout.addWidget(self.search_button)  # Añade el botón de búsqueda al layout vertical
 
 class Interface:

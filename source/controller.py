@@ -30,7 +30,14 @@ class Controller:
         # Obtiene los valores de los campos de búsqueda en la vista y llama a los métodos correspondientes del modelo para imprimir los valores.
         
         sap_value = self.view.search_sap_bar.text()  # Obtiene el valor ingresado en la barra de búsqueda de SAP desde la vista
-        self.model.print_sap(sap_value)  # Llama al método del modelo para imprimir el valor de SAP
+        sap_result = self.model.search_column(sap_value, "SAP")  # Buscar en la columna "SAP"
+        if sap_result is not None:
+            self.model.print_sap(sap_result)  # Llama al método del modelo para imprimir el valor de SAP
 
-        consecutive_value = self.view.search_consecutive_bar.text()  # Obtiene el valor ingresado en la barra de búsqueda consecutiva desde la vista
-        self.model.print_consecutivo(consecutive_value)  # Llama al método del modelo para imprimir el valor consecutivo
+        consecutive_value = self.view.search_consecutive_bar.text()
+        consecutive_result = self.model.search_column(consecutive_value, "CONSECUTIVO")  # Buscar en la columna "Consecutivo"
+        if consecutive_result is not None:
+            self.model.print_consecutivo(consecutive_result)  # Llama al método del modelo para imprimir el valor consecutivo
+        
+
+       
