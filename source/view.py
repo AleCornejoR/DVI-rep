@@ -32,11 +32,11 @@ class View(QMainWindow):
 
     def setupLayout(self):
         # Configura el diseño de la ventana
-        self.layout = QVBoxLayout()  # Crea un layout vertical
+        self.vertical_layout = QVBoxLayout()  # Crea un layout vertical
         self.central_widget = QWidget()  # Crea un widget central
-        self.central_widget.setLayout(self.layout)  # Asigna el layout al widget central
+        self.central_widget.setLayout(self.vertical_layout)  # Asigna el layout al widget central
         self.setCentralWidget(self.central_widget)  # Establece el widget central de la ventana principal
-        self.layout.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)  # Centra horizontal y verticalmente los widgets en el layout
+        self.vertical_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)  # Centra horizontal y verticalmente los widgets en el layout
 
         self.setupSearchSapBar()  # Configura la barra de búsqueda
         self.setupSearchConsecutiveBar()  # Configura la barra de búsqueda
@@ -54,7 +54,7 @@ class View(QMainWindow):
             }
             """
         )
-        self.layout.addWidget(self.search_sap_bar)  # Añade la barra de búsqueda al layout vertical
+        self.vertical_layout.addWidget(self.search_sap_bar)  # Añade la barra de búsqueda al layout vertical
     
     def setupSearchConsecutiveBar(self):
         # Configura la barra de búsqueda
@@ -68,7 +68,7 @@ class View(QMainWindow):
             }
             """
         )
-        self.layout.addWidget(self.search_consecutive_bar)  # Añade la barra de búsqueda al layout vertical
+        self.vertical_layout.addWidget(self.search_consecutive_bar)  # Añade la barra de búsqueda al layout vertical
 
     def setupSearchButton(self):
         # Configura el botón de búsqueda
@@ -92,7 +92,7 @@ class View(QMainWindow):
             }
             """
         )
-        self.layout.addWidget(self.search_button)  # Añade el botón de búsqueda al layout vertical
+        self.vertical_layout.addWidget(self.search_button)  # Añade el botón de búsqueda al layout vertical
 
 class Interface:
     def __init__(self):
