@@ -35,9 +35,12 @@ class Controller:
             self.model.print_sap(sap_result)  # Llama al método del modelo para imprimir el valor de SAP
 
         consecutive_value = self.view.search_consecutive_bar.text()
-        consecutive_result = self.model.search_column(consecutive_value, "CONSECUTIVO")  # Buscar en la columna "Consecutivo"
+        consecutive_result = self.model.search_column(consecutive_value, "CONSECUTIVO")  # Buscar en la columna "CONSECUTIVO"
         if consecutive_result is not None:
             self.model.print_consecutivo(consecutive_result)  # Llama al método del modelo para imprimir el valor consecutivo
-        
 
-       
+        molde_value = self.view.search_molde_bar.text()
+        molde_result = self.model.search_column(molde_value, "MOLDE")  # Buscar en la columna "MOLDE"
+        if molde_result is not None:
+            self.model.print_molde(molde_result)  # Llama al método del modelo para imprimir el valor molde
+        

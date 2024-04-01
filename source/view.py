@@ -21,7 +21,7 @@ class View(QMainWindow):
         super().__init__()
         self.setWindowTitle("Search Interface")
         # Asigna un tamaño específico a la ventana
-        self.setFixedSize(400, 100)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
+        self.setFixedSize(400, 150)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
         self.initUI()
     
     def initUI(self):
@@ -40,6 +40,7 @@ class View(QMainWindow):
 
         self.setupSearchSapBar()  # Configura la barra de búsqueda
         self.setupSearchConsecutiveBar()  # Configura la barra de búsqueda
+        self.setupSearchMoldeBar()  # Configura la barra de búsqueda
         self.setupSearchButton()  # Configura el botón de búsqueda
 
     def setupSearchSapBar(self):
@@ -69,6 +70,20 @@ class View(QMainWindow):
             """
         )
         self.vertical_layout.addWidget(self.search_consecutive_bar)  # Añade la barra de búsqueda al layout vertical
+
+    def setupSearchMoldeBar(self):
+        # Configura la barra de búsqueda
+        self.search_molde_bar = QLineEdit()  # Crea una barra de búsqueda
+        self.search_molde_bar.setPlaceholderText("Número de Molde")  # Establece el texto previo
+        self.search_molde_bar.setStyleSheet(
+            """
+            QLineEdit {
+                border-radius: 10px;  /* Establece las esquinas redondeadas */
+                padding: 5px;  /* Añade un pequeño relleno */
+            }
+            """
+        )
+        self.vertical_layout.addWidget(self.search_molde_bar)  # Añade la barra de búsqueda al layout vertical
 
     def setupSearchButton(self):
         # Configura el botón de búsqueda
