@@ -74,7 +74,7 @@ class Model:
         print("Resultados de la búsqueda de consecutivo:")
         print(consecutive_value)
 
-    def print_molde(self, molde_value): # Método para imprimir el valor de SAP.
+    def print_molde(self, molde_value): # Método para imprimir el valor de molde.
         print("Resultados de la búsqueda del molde:")
         print(molde_value)
         
