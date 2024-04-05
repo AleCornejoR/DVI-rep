@@ -15,11 +15,11 @@ import sys  # Importa el módulo sys para acceder a los argumentos de la línea 
 #-----------------------------------------
 def main():
     model = Model()  # Instancia el modelo
-    app = QApplication([])  # Crea una instancia de la aplicación QApplication
-    interface = Interface()  # Crea una instancia de la interfaz
-
     file_path = "resources/data/dataFrameA.xlsx"  # Ruta del archivo Excel
     model.load_excel_data(file_path)  # Carga los datos del archivo de Excel en el DataFrame
+
+    app = QApplication([])  # Crea una instancia de la aplicación QApplication
+    interface = Interface()  # Crea una instancia de la interfaz
 
     interface.show()  # Muestra la interfaz
     sys.exit(app.exec())
