@@ -68,14 +68,8 @@ class View(QMainWindow):
         search_bar = QLineEdit()  # Crea una barra de búsqueda
         formatted_column = column.capitalize().replace("_", " ")
         search_bar.setPlaceholderText(f"{formatted_column}")  # Establece el texto previo
-        search_bar.setStyleSheet(
-            """
-            QLineEdit {
-                border-radius: 10px;  /* Establece las esquinas redondeadas */
-                padding: 5px;  /* Añade un pequeño relleno */
-            }
-            """
-        )
+        self.set_search_bar_style(search_bar)
+
         setattr(self, f"search_{column.lower()}_bar", search_bar)  # Agrega la barra de búsqueda al objeto self con el nombre adecuado
         self.vertical_layout.addWidget(search_bar)  # Añade la barra de búsqueda al layout vertical
         print("~ [OK]")
@@ -94,6 +88,18 @@ class View(QMainWindow):
         self.vertical_layout.addWidget(self.search_button)  # Añade el botón de búsqueda al layout vertical
         print("~ [OK]")
 
+    def set_search_bar_style(self, search_bar):
+        # Definimos el estilo del botón con esquinas redondeadas
+        search_bar.setStyleSheet(
+            """
+            QLineEdit {
+                border-radius: 10px;  /* Establece las esquinas redondeadas */
+                padding: 5px;  /* Añade un pequeño relleno */
+                background-color: #FFFFFF;  /* Cambia el color de fondo a blanco */
+            }
+            """
+        )
+    
     def set_search_button_style(self):
         # Definimos el estilo del botón con esquinas redondeadas
         self.search_button.setStyleSheet(

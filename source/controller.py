@@ -77,7 +77,29 @@ class Controller:
         self.view.setup_completers(self.model.column_names, actual_suggestions_dict)  # Actualizar las sugerencias en la vista
     
     def autocomplete_search_bars(self, actual_suggestions_dict):
-        pass
+        print("\n> Controller -> Autocompletando Barras de Búsqueda: START")
+
+        # Iterar sobre las sugerencias para cada columna
+        for column, suggestions in actual_suggestions_dict.items():
+            if len(suggestions) == 1:  # Verificar si solo hay una sugerencia
+                search_bar = getattr(self.view, f"search_{column.lower()}_bar")  # Obtener la barra de búsqueda correspondiente
+                search_bar.setText(suggestions[0])  # Rellenar la barra de búsqueda con la única sugerencia
+                search_bar.setReadOnly(True)  # Bloquear la barra de búsqueda
+                print(f"> Controller -> Autocompletando y bloqueando la barra de búsqueda de {column} con valor {suggestions[0]}")
+
+                search_bar.setStyleSheet(
+                    """
+                    QLineEdit {
+                        border-radius: 10px;  /* Establece las esquinas redondeadas */
+                        padding: 5px;  /* Añade un pequeño relleno */
+                        background-color: #E0E9FF;  /* Cambia el color de fondo */
+                    }
+                    """
+                )
+            else:
+                print(f"> Controller -> No se puede autocompletar ni bloquear la barra de búsqueda de {column} ya que hay múltiples sugerencias")
+
+        print("> Controller -> Autocompletando Barras de Búsqueda: END")
 
     def update_search_button_state(self):
         # Verifica si todas las barras de búsqueda tienen texto y actualiza el estado del botón de búsqueda
