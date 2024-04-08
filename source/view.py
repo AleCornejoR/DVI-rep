@@ -25,19 +25,22 @@ class View(QMainWindow):
         super().__init__()
         self.setWindowTitle("Buscador")
         # Asigna un tamaño específico a la ventana
-        self.setFixedSize(300, 300)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
         self.initUI()
     
     def initUI(self):
         # Inicializa la interfaz de usuario
-        print("\n> Iniciando Interfaz ----->")
+        print("> View -> Iniciando Interfaz")
 
         icon_path = "resources/images/icono-ink.ico"  # Ruta de la imagen del icono
         self.setWindowIcon(QIcon(icon_path)) # Configura el icono de la ventana
         self.setupLayout()  # Configura el diseño de la interfaz
 
+        search_bar_names = self.readSearchBarNamesFromFile("resources/data/column_names.txt")
+        height_size = 35 * (1 + len(search_bar_names))
+        self.setFixedSize(300, height_size)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
+
     def setupLayout(self):
-        print("> Configurando Ventana ----->")
+        print("> View -> Configurando Ventana: START")
 
         # Configura el diseño de la ventana
         self.vertical_layout = QVBoxLayout()  # Crea un layout vertical
@@ -46,22 +49,26 @@ class View(QMainWindow):
         self.setCentralWidget(self.central_widget)  # Establece el widget central de la ventana principal
         self.vertical_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)  # Centra horizontal y verticalmente los widgets en el layout
 
-        self.setupSearchPlantaBar()
-        self.setupSearchConsecutiveBar()  # Configura la barra de búsqueda
-        self.setupSearchSapBar()  # Configura la barra de búsqueda
-        self.setupSearchMoldeBar()  # Configura la barra de búsqueda
-        self.setupSearchUsoBar()
-        self.setupSearchTiempoDeVidaBar()
-        self.setupSearchProductoBar()
+        search_bar_names = self.readSearchBarNamesFromFile("resources/data/column_names.txt")
+        for column in search_bar_names:
+            self.setupSearchBar(column)
+
         self.setupSearchButton()  # Configura el botón de búsqueda
+        
+        print("> View -> Configurando Ventana: [OK]")
 
-    def setupSearchSapBar(self):
-        print("> Configurando Barra de Busqueda SAP ----->")
+    def readSearchBarNamesFromFile(self, file_path):
+        with open(file_path, "r") as file:
+            return [line.strip() for line in file]
+        
+    def setupSearchBar(self, column):
+        print(f"> View -> Configurando Barra de Busqueda {column}: START", end = " ")
 
         # Configura la barra de búsqueda
-        self.search_sap_bar = QLineEdit()  # Crea una barra de búsqueda
-        self.search_sap_bar.setPlaceholderText("Número de SAP")  # Establece el texto previo
-        self.search_sap_bar.setStyleSheet(
+        search_bar = QLineEdit()  # Crea una barra de búsqueda
+        formatted_column = column.capitalize().replace("_", " ")
+        search_bar.setPlaceholderText(f"{formatted_column}")  # Establece el texto previo
+        search_bar.setStyleSheet(
             """
             QLineEdit {
                 border-radius: 10px;  /* Establece las esquinas redondeadas */
@@ -69,106 +76,12 @@ class View(QMainWindow):
             }
             """
         )
-        self.vertical_layout.addWidget(self.search_sap_bar)  # Añade la barra de búsqueda al layout vertical
-    
-    def setupSearchConsecutiveBar(self):
-        print("> Configurando Barra de Busqueda CONSECUTIVO ----->")
-
-        # Configura la barra de búsqueda
-        self.search_consecutivo_bar = QLineEdit()  # Crea una barra de búsqueda
-        self.search_consecutivo_bar.setPlaceholderText("Número Consecutivo")  # Establece el texto previo
-        self.search_consecutivo_bar.setStyleSheet(
-            """
-            QLineEdit {
-                border-radius: 10px;  /* Establece las esquinas redondeadas */
-                padding: 5px;  /* Añade un pequeño relleno */
-            }
-            """
-        )
-        self.vertical_layout.addWidget(self.search_consecutivo_bar)  # Añade la barra de búsqueda al layout vertical
-
-    def setupSearchMoldeBar(self):
-        print("> Configurando Barra de Busqueda MOLDE ----->")
-
-        # Configura la barra de búsqueda
-        self.search_molde_bar = QLineEdit()  # Crea una barra de búsqueda
-        self.search_molde_bar.setPlaceholderText("Número de Molde")  # Establece el texto previo
-        self.search_molde_bar.setStyleSheet(
-            """
-            QLineEdit {
-                border-radius: 10px;  /* Establece las esquinas redondeadas */
-                padding: 5px;  /* Añade un pequeño relleno */
-            }
-            """
-        )
-        self.vertical_layout.addWidget(self.search_molde_bar)  # Añade la barra de búsqueda al layout vertical
-
-    def setupSearchPlantaBar(self):
-        print("> Configurando Barra de Busqueda Planta ----->")
-
-        # Configura la barra de búsqueda
-        self.search_planta_bar = QLineEdit()  # Crea una barra de búsqueda
-        self.search_planta_bar.setPlaceholderText("Planta")  # Establece el texto previo
-        self.search_planta_bar.setStyleSheet(
-            """
-            QLineEdit {
-                border-radius: 10px;  /* Establece las esquinas redondeadas */
-                padding: 5px;  /* Añade un pequeño relleno */
-            }
-            """
-        )
-        self.vertical_layout.addWidget(self.search_planta_bar)  # Añade la barra de búsqueda al layout vertical
-
-    def setupSearchUsoBar(self):
-        print("> Configurando Barra de Busqueda USO ----->")
-
-        # Configura la barra de búsqueda
-        self.search_uso_bar = QLineEdit()  # Crea una barra de búsqueda
-        self.search_uso_bar.setPlaceholderText("Uso")  # Establece el texto previo
-        self.search_uso_bar.setStyleSheet(
-            """
-            QLineEdit {
-                border-radius: 10px;  /* Establece las esquinas redondeadas */
-                padding: 5px;  /* Añade un pequeño relleno */
-            }
-            """
-        )
-        self.vertical_layout.addWidget(self.search_uso_bar)  # Añade la barra de búsqueda al layout vertical
-
-    def setupSearchTiempoDeVidaBar(self):
-        print("> Configurando Barra de Busqueda TIEMPO DE VIDA ----->")
-
-        # Configura la barra de búsqueda
-        self.search_tiempo_de_vida_bar = QLineEdit()  # Crea una barra de búsqueda
-        self.search_tiempo_de_vida_bar.setPlaceholderText("Tiempo de Vida")  # Establece el texto previo
-        self.search_tiempo_de_vida_bar.setStyleSheet(
-            """
-            QLineEdit {
-                border-radius: 10px;  /* Establece las esquinas redondeadas */
-                padding: 5px;  /* Añade un pequeño relleno */
-            }
-            """
-        )
-        self.vertical_layout.addWidget(self.search_tiempo_de_vida_bar)  # Añade la barra de búsqueda al layout vertical
-
-    def setupSearchProductoBar(self):
-        print("> Configurando Barra de Busqueda Producto ----->")
-
-        # Configura la barra de búsqueda
-        self.search_producto_bar = QLineEdit()  # Crea una barra de búsqueda
-        self.search_producto_bar.setPlaceholderText("Poducto")  # Establece el texto previo
-        self.search_producto_bar.setStyleSheet(
-            """
-            QLineEdit {
-                border-radius: 10px;  /* Establece las esquinas redondeadas */
-                padding: 5px;  /* Añade un pequeño relleno */
-            }
-            """
-        )
-        self.vertical_layout.addWidget(self.search_producto_bar)  # Añade la barra de búsqueda al layout vertical
+        setattr(self, f"search_{column.lower()}_bar", search_bar)  # Agrega la barra de búsqueda al objeto self con el nombre adecuado
+        self.vertical_layout.addWidget(search_bar)  # Añade la barra de búsqueda al layout vertical
+        print("~ [OK]")
 
     def setupSearchButton(self):
-        print("> Configurando Boton de Busqueda ----->\n")
+        print("> View -> Configurando Boton de Busqueda: START", end = " ")
 
         # Configura el botón de búsqueda
         self.search_button = QPushButton("Search")  # Crea un botón de búsqueda con el texto "Search"
@@ -179,6 +92,7 @@ class View(QMainWindow):
         self.set_search_button_style()
 
         self.vertical_layout.addWidget(self.search_button)  # Añade el botón de búsqueda al layout vertical
+        print("~ [OK]")
 
     def set_search_button_style(self):
         # Definimos el estilo del botón con esquinas redondeadas
@@ -208,22 +122,10 @@ class View(QMainWindow):
         if event.key() == Qt.Key.Key_Return:
             self.enterPressed.emit()  # Emitir la señal cuando se presiona Enter
     
-    def setup_completers(self, suggestions_dict):
-        print("\n> Configurando Autocompletar de Barras de Busqueda ----->\n")
+    def setup_completers(self, search_bar_list, suggestions_dict):
+        print("\n> View -> Configurando Autocompletar de Barras de Busqueda: START", end = " ")
 
-        if suggestions_dict:
-            print("- View -> Sugerencias recibidas en la vista: OK")
-        else:
-            print("- View -> Sugerencias recibidas en la vista: NOK")
-
-        search_bar_list = [
-            "PLANTA",
-            "CONSECUTIVO",
-            "SAP", 
-            "MOLDE",
-            "USO",
-            "TIEMPO_DE_VIDA",
-            "PRODUCTO"]
+        print("~ [OK]" if suggestions_dict else "~ [NOK]")
 
         for column in search_bar_list:
             search_bar = getattr(self, f"search_{column.lower()}_bar")
@@ -236,12 +138,12 @@ class View(QMainWindow):
 class Interface:
     def __init__(self):
         #Constructor de la clase Interface
-        print("\n>> Iniciando Ventana ----->\n")
+        print("\n>> Iniciando Ventana - Interface ----->")
 
         self.view = View()  # Inicializa una instancia de la clase View
         self.controller = Controller(self.view)  # Inicializa una instancia del controlador asociado a la vista
 
     def show(self):
-        print("\n> Mostrando Ventana ----->\n")
+        print("\n> Interface -> Mostrando Ventana")
         # Método para mostrar la interfaz de usuario
         self.view.show()  # Muestra la ventana principal de la interfaz de usuario
