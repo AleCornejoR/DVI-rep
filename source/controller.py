@@ -57,7 +57,13 @@ class Controller:
         self.update_search_button_state()
 
     def obtain_text_in_search_bars(self):
-        text_in_search_bars = [getattr(self.view, f"search_{column.lower()}_bar").text() for column in self.model.column_names]
+        text_in_search_bars = []
+        for column in self.model.column_names:
+            search_text = getattr(self.view, f"search_{column.lower()}_bar").text()
+            if ": " in search_text:
+                text_in_search_bars.append(search_text.split(": ")[1])
+            else:
+                text_in_search_bars.append(search_text)
         return text_in_search_bars
     
     def search_suggestions(self):
@@ -83,7 +89,7 @@ class Controller:
         for column, suggestions in actual_suggestions_dict.items():
             if len(suggestions) == 1:  # Verificar si solo hay una sugerencia
                 search_bar = getattr(self.view, f"search_{column.lower()}_bar")  # Obtener la barra de búsqueda correspondiente
-                search_bar.setText(suggestions[0])  # Rellenar la barra de búsqueda con la única sugerencia
+                search_bar.setText(f"{search_bar.placeholderText()}: {suggestions[0]}")  # Rellenar la barra de búsqueda con la única sugerencia
                 search_bar.setReadOnly(True)  # Bloquear la barra de búsqueda
                 print(f"> Controller -> Autocompletando y bloqueando la barra de búsqueda de {column} con valor {suggestions[0]}")
 
@@ -130,9 +136,9 @@ class Controller:
         # Maneja la búsqueda.
         # Obtiene los valores de los campos de búsqueda en la vista y llama a los métodos correspondientes del modelo para imprimir los valores.
         print("\n> Controller -> Administrando Busqueda: START")
+        actual_value_list = self.obtain_text_in_search_bars()
 
-        for column_name in self.model.column_names:
-            search_value = getattr(self.view, f"search_{column_name.lower()}_bar").text()
+        for column_name, search_value in zip(self.model.column_names, actual_value_list):
             result = self.model.search_column(search_value, column_name)
             if result is not None:
                 self.model.print_value(column_name, result)  # Llama al método del modelo para imprimir el valor correspondiente
