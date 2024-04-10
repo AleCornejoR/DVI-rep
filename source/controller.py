@@ -136,7 +136,7 @@ class Controller:
         # Maneja la búsqueda.
         # Obtiene los valores de los campos de búsqueda en la vista y llama a los métodos correspondientes del modelo para imprimir los valores.
         print("\n> Controller -> Administrando Busqueda: START")
-        actual_value_list = self.obtain_text_in_search_bars()
+        actual_value_list = self.obtain_text_in_search_bars() #Actual list
 
         for column_name, search_value in zip(self.model.column_names, actual_value_list):
             result = self.model.search_column(search_value, column_name)
