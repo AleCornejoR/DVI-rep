@@ -142,3 +142,5 @@ class Controller:
             result = self.model.search_column(search_value, column_name)
             if result is not None:
                 self.model.print_value(column_name, result)  # Llama al método del modelo para imprimir el valor correspondiente
+        
+        self.view.show_result_window()

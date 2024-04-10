@@ -42,7 +42,7 @@ class Model:
             print(self.dataframe.info())
             
             # Guarda los nombres de las columnas en un archivo .txt y genera sugerencias
-            Model.column_names = self.dataframe.columns.tolist()#[:3]
+            Model.column_names = [self.dataframe.columns.tolist()[i] for i in (0, 1, 2, 3, 6)]
             self.save_column_names(self.column_names)
             self.suggestions()
 
@@ -94,7 +94,7 @@ class Model:
         print("> Model -> Generando nuevas Sugerencias: START", end = " ")
 
         # Inicializar el DataFrame original con todas las filas
-        filtered_df = self.dataframe
+        filtered_df = self.dataframe[self.column_names]
 
         # Aplicar el filtro solo si el valor ingresado pertenece a las sugerencias existentes
         for column, value in zip(self.column_names, search_bar_values):
