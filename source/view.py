@@ -9,7 +9,7 @@ La clase Interface se encarga de crear una instancia de la clase View y del cont
 #-----------------------------------------
 import sys
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QLineEdit, QPushButton, QCompleter, QLineEdit, QDialog, QLabel, QGridLayout
-from PyQt6.QtGui import QIcon, QPixmap, QImage # Importa la clase QIcon desde PyQt6.QtGui
+from PyQt6.QtGui import QIcon # Importa la clase QIcon desde PyQt6.QtGui
 from PyQt6.QtCore import Qt, pyqtSignal
 import os
 from source.controller import Controller  # Importamos el controlador
@@ -53,8 +53,6 @@ class View(QMainWindow):
 
         self.setupSearchButton()  # Configura el botón de búsqueda
 
-        # Asigna un tamaño específico a la ventana
-        search_bar_names = self.readSearchBarNamesFromFile("resources/data/column_names.txt")
         height_size = 35 * (1 + len(search_bar_names))
         self.setFixedSize(300, height_size)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
         
@@ -147,6 +145,14 @@ class View(QMainWindow):
         # Crear una instancia de la ventana emergente y mostrarla
         popup_window = ResultWindow()
         popup_window.exec()
+
+        search_bar_names = self.readSearchBarNamesFromFile("resources/data/column_names.txt")
+
+        for column in search_bar_names:
+            search_bar = getattr(self, f"search_{column.lower()}_bar")
+            search_bar.clear()
+            search_bar.setReadOnly(False)
+            self.set_search_bar_style(search_bar)
     
 class ResultWindow(QDialog):
     def __init__(self):
@@ -158,6 +164,7 @@ class ResultWindow(QDialog):
         self.setWindowTitle("Resultado")
         self.initUI()
 
+    
     def initUI(self):
         # Inicializa la ventana de resultados
         print("> ResultWindow -> Iniciando Interfaz")
@@ -178,7 +185,7 @@ class ResultWindow(QDialog):
         layout.addWidget(boton_abrir_pdf)
 
     def open_pdf(self):
-        ruta_pdf = os.path.join("resources", "PDF", "Test1.pdf")
+        ruta_pdf = os.path.join("resources", "pdf", "Test1.pdf")
         if os.path.exists(ruta_pdf):
             print("El archivo existe en la ruta especificada.")
             os.startfile(ruta_pdf)  # Abre el PDF con el programa predeterminado asociado en Windows
@@ -187,6 +194,7 @@ class ResultWindow(QDialog):
         
 
         self.accept()  # Cerrar la ventana emergente después de abrir el PDF
+
 
 class Interface:
     def __init__(self):
