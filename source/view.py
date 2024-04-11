@@ -178,7 +178,7 @@ class ResultWindow(QDialog):
         layout.addWidget(boton_abrir_pdf)
 
     def open_pdf(self):
-        ruta_pdf = "resources/PDF/1.pdf"  # Reemplaza con la ruta correcta de tu PDF
+        ruta_pdf = os.path.join("resources", "PDF", "Test1.pdf")
         if os.path.exists(ruta_pdf):
             print("El archivo existe en la ruta especificada.")
             os.startfile(ruta_pdf)  # Abre el PDF con el programa predeterminado asociado en Windows
