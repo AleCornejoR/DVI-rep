@@ -31,6 +31,7 @@ class Controller:
         # Conecta los eventos de la vista a los métodos correspondientes del controlador.
         print("\n> Controller -> Conectando Señales: START", end = " ")
         self.view.search_button.clicked.connect(self.handle_search) # Conecta el evento de hacer clic en el botón de búsqueda al método handle_search
+        self.view.pdf_button.clicked.connect(self.generate_pdf) # Conecta el evento de hacer clic en el botón de búsqueda al método generate_pdf
 
         search_bars = [column.lower() for column in self.model.column_names]
 
@@ -111,6 +112,7 @@ class Controller:
         # Verifica si todas las barras de búsqueda tienen texto y actualiza el estado del botón de búsqueda
         print("> Controller -> Actualizando Boton de Busqueda: START", end = " ")
         self.view.search_button.setEnabled(all(self.obtain_text_in_search_bars()))  # Habilita/deshabilita el botón de búsqueda
+        self.view.pdf_button.setEnabled(all(self.obtain_text_in_search_bars()))  # Habilita/deshabilita el botón de búsqueda
         print("~ [OK]")
 
     def handle_enter_key(self):
@@ -144,3 +146,8 @@ class Controller:
                 self.model.print_value(column_name, result)  # Llama al método del modelo para imprimir el valor correspondiente
         
         self.view.show_result_window()
+
+    def generate_pdf(self):
+        print("\n> Controller -> Administrando Busqueda: START", end = " ")
+        self.model.generate_pdf(self.model.dataframe, "resources/pdf/output.pdf")
+        print("~ [OK]")

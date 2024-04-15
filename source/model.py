@@ -9,6 +9,7 @@ El modelo representa los datos y la lógica de la aplicación.
 import pandas as pd  # Importa la librería pandas y la renombra como pd
 import numpy as np  # Importa la librería numpy y la renombra como np
 import os  # Importa el módulo os para interactuar con el sistema operativo
+from resources.templates.myTemplate import generate_pdf
 
 #-----------------------------------------
 # CLASES PARA MODELO MODEL.PY
@@ -147,3 +148,6 @@ class Model:
 
     def print_value(self, column, value): # Método para imprimir el valor.
         print("> Model -> Resultados de la busqueda", column, ":\n", value, "\n")
+    
+    def generate_pdf(self, data, output_path):
+        generate_pdf(data, output_path)

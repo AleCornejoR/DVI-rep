@@ -52,6 +52,7 @@ class View(QMainWindow):
             self.setupSearchBar(column)
 
         self.setupSearchButton()  # Configura el botón de búsqueda
+        self.setupPdfButton() # Configura el botón para generar PDF
 
         height_size = 35 * (1 + len(search_bar_names))
         self.setFixedSize(300, height_size)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
@@ -124,6 +125,43 @@ class View(QMainWindow):
             }
             """
         )
+    def setupPdfButton(self):
+        print("> View -> Configurando Boton de Generar PDF: START", end = " ")
+
+        # Configura el botón de generar PDF
+        self.pdf_button = QPushButton("Generar PDF")  # Crea un botón de generar PDF con el texto "Generar PDF"
+
+        # Añade un icono al botón
+        #pdf_icon = QIcon("ruta/al/icono.pdf")  # Reemplaza "ruta/al/icono.pdf" con la ruta de tu icono
+        #self.pdf_button.setIcon(pdf_icon)
+        self.set_pdf_button_style()
+
+        self.vertical_layout.addWidget(self.pdf_button)  # Añade el botón de generar PDF al layout vertical
+        print("~ [OK]")
+
+    def set_pdf_button_style(self):
+        # Definimos el estilo del botón con esquinas redondeadas
+     self.pdf_button.setStyleSheet(
+            """
+            QPushButton {
+                border-radius: 10px;  /* Establece las esquinas redondeadas */
+                background-color: #FF5733;  /* Color de fondo */
+                color: white;  /* Color del texto */
+                padding: 5px 5px;  /* Relleno interno */
+                min-width: 100px;  /* Ancho mínimo del botón */
+                max-width: 100px;  /* Ancho máximo del botón */
+            }
+            QPushButton:hover {
+                background-color: #E64A19;  /* Color de fondo cuando se pasa el cursor sobre el botón */
+            }
+            QPushButton:pressed {
+                background-color: #BF360C;  /* Color de fondo cuando se presiona el botón */
+            }
+            QPushButton:disabled {
+                background-color: #CCCCCC;  /* Color de fondo cuando el botón está deshabilitado (gris) */
+            }   
+            """
+        )
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Return:
@@ -185,7 +223,7 @@ class ResultWindow(QDialog):
         layout.addWidget(boton_abrir_pdf)
 
     def open_pdf(self):
-        ruta_pdf = os.path.join("resources", "pdf", "pdfTest1.pdf")
+        ruta_pdf = os.path.join("resources", "pdf", "output.pdf")
         if os.path.exists(ruta_pdf):
             print("El archivo existe en la ruta especificada.")
             os.startfile(ruta_pdf)  # Abre el PDF con el programa predeterminado asociado en Windows
