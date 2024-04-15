@@ -149,5 +149,8 @@ class Model:
     def print_value(self, column, value): # Método para imprimir el valor.
         print("> Model -> Resultados de la busqueda", column, ":\n", value, "\n")
     
-    def generate_pdf(self, data, output_path):
+    def generate_pdf(self, result, output_path):
+        # Filtrar el DataFrame
+        filtro = self.dataframe[self.column_names].apply(lambda x: x.astype(str).isin(result)).all(axis=1)
+        data = self.dataframe[filtro]
         generate_pdf(data, output_path)

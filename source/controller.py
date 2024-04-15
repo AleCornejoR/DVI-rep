@@ -146,8 +146,11 @@ class Controller:
                 self.model.print_value(column_name, result)  # Llama al método del modelo para imprimir el valor correspondiente
         
         self.view.show_result_window()
+        self.search_suggestions()
 
     def generate_pdf(self):
         print("\n> Controller -> Administrando Busqueda: START", end = " ")
-        self.model.generate_pdf(self.model.dataframe, "resources/pdf/output.pdf")
+        result = self.obtain_text_in_search_bars()
+        print(result)
+        self.model.generate_pdf(result, "resources/pdf")
         print("~ [OK]")
