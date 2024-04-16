@@ -54,7 +54,7 @@ class View(QMainWindow):
         self.setupSearchButton()  # Configura el botón de búsqueda
         self.setupPdfButton() # Configura el botón para generar PDF
 
-        height_size = 35 * (1 + len(search_bar_names))
+        height_size = 38 * (1 + len(search_bar_names))
         self.setFixedSize(300, height_size)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
         
         print("> View -> Configurando Ventana: [OK]")

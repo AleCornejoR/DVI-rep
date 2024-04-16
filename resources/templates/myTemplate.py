@@ -1,82 +1,70 @@
 import pandas as pd
 import os
-from reportlab.lib.pagesizes import landscape, letter
+
+from reportlab.lib.pagesizes import landscape, A4
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-from reportlab.lib import utils
 
 def generate_pdf(data, output_path):
-    # Extraer los valores relevantes de 'data'
-    molde_consecutivo = data.get('CONSECUTIVO', '').values[0] if 'CONSECUTIVO' in data else ''
-    molde_sap = data.get('SAP', '').values[0] if 'SAP' in data else ''
-    molde_producto = data.get('PRODUCTO', '').values[0] if 'PRODUCTO' in data else ''
-    molde_uso = data.get('USO', '').values[0] if 'USO' in data else ''
+    columnas_data = data.columns.tolist()
+    # Crear un diccionario para almacenar los valores de todas las columnas de 'data'
+    valores_data = {columna: data[columna].values[0] if columna in data else '' for columna in data.columns}
+
+    # Definir un diccionario que mapea los estados de uso a texto y colores correspondientes
+    estados = {
+        1: {"texto": "USO", "color": colors.green},
+        2: {"texto": "DESUSO", "color": colors.red},
+    }
+
+    # Determinar el estado del molde y configurar el texto y color correspondiente
+    estado_info = estados.get(valores_data["USO"], {"texto": "Estado: Desconocido", "color": colors.gray})
 
     # Construir el encabezado
-    header_text = f"Molde: {molde_consecutivo},{molde_sap}-{molde_producto}"
+    header_text = f"Molde: {valores_data['CONSECUTIVO']}, {valores_data['SAP']} - {valores_data['PRODUCTO']}"
 
-    # Determinar el estado
-    estado_text = "Estado: "
-    if molde_uso == 1:
-        estado_text += "USO"
-    elif molde_uso == 2:
-        estado_text += "DESUSO"
-    else:
-        estado_text += "Desconocido"
-
-    # Crear el nombre de archivo
-    file_name = f"{molde_consecutivo}_{molde_sap}_{molde_producto}.pdf"
-    # Agrega el nombre de archivo al path de salida
-    output_path = os.path.join(output_path, file_name)
+    output_path = create_outputh_path(valores_data, output_path)
 
     # Crear un objeto SimpleDocTemplate para el PDF con la página en horizontal
-    doc = SimpleDocTemplate(output_path, pagesize=landscape(letter))
+    doc = SimpleDocTemplate(output_path, pagesize=landscape(A4))
 
-    # Crear un objeto SimpleDocTemplate para el PDF con la página en horizontal
-    doc = SimpleDocTemplate(output_path, pagesize=landscape(letter))
-
-    # Establecer el estilo del párrafo para el encabezado y el cuerpo
+    # Establecer el estilo del párrafo para el encabezado
     styles = getSampleStyleSheet()
     header_style = styles["Heading1"]
-    body_style = styles["Normal"]
 
     # Crear contenido para el encabezado
     header_content = Paragraph(header_text, header_style)
 
-    # Crear contenido para el cuerpo del documento
-    body_content = []
-    body_content.append(Paragraph("Información del documento:", body_style))
-    for key, value in data.items():
-        # Agregar solo el valor al contenido del cuerpo
-        body_content.append(Paragraph(f"{key}: {value.values[0] if isinstance(value, pd.Series) else value}", body_style))
+    # Crear un párrafo con el texto del estado
+    estado_text = estado_info["texto"]
+    estado_paragraph = Paragraph(f"Estado: {estado_text}", styles["Normal"])
 
-    # Agregar un pie de página
-    footer_content = Paragraph("Pie de página - Información adicional", body_style)
+    # Calcular el ancho máximo del cuadro basado en la longitud del texto del estado
+    max_width = len(estado_info["texto"]) * 32  # Ajusta el factor de multiplicación según tus necesidades
+
+    # Crear una tabla para contener el párrafo del estado
+    estado_table = Table([[estado_paragraph]], style=[
+        ('BACKGROUND', (0, 0), (-1, -1), estado_info["color"]),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.white),
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black)], 
+        colWidths=[max_width])  # Ajustar automáticamente el ancho de la columna
 
     # Construir el contenido del PDF
-    content = [header_content] + body_content + [Spacer(1, 0.2*inch), footer_content]
-
-    # Determinar el estado para el rectángulo
-    estado_color = colors.green if molde_uso == 1 else colors.red if molde_uso == 2 else colors.red
-
-    # Crear el rectángulo
-    estado_rect = Table([["Estado: USO" if molde_uso == 1 else "Estado: DESUSO" if molde_uso == 2 else "Estado: Desconocido"]], 
-                        style=[
-                            ('BACKGROUND', (0, 0), (0, 0), estado_color),
-                            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                            ('TEXTCOLOR', (0, 0), (-1, -1), colors.white),
-                            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black)
-                        ])
-
-    # Agregar el rectángulo al contenido
-    content.insert(1, estado_rect)
+    content = [header_content, Spacer(1, 0.2 * inch), estado_table]
 
     # Agregar el contenido al PDF
     doc.build(content)
 
+def create_outputh_path(valores_data, output_path):
+    # Crear el nombre de archivo
+    file_name = f"{valores_data["CONSECUTIVO"]}_{valores_data["SAP"]}_{valores_data["PRODUCTO"]}.pdf"
+    # Agrega el nombre de archivo al path de salida
+    output_path = os.path.join(output_path, file_name)
+
+    return output_path
 
 
 # Ejemplo de uso
