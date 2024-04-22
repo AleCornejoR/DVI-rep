@@ -9,6 +9,7 @@ El modelo representa los datos y la lógica de la aplicación.
 import pandas as pd  # Importa la librería pandas y la renombra como pd
 import numpy as np  # Importa la librería numpy y la renombra como np
 import os  # Importa el módulo os para interactuar con el sistema operativo
+from resources.templates.myTemplate import generate_pdf
 
 #-----------------------------------------
 # CLASES PARA MODELO MODEL.PY
@@ -42,7 +43,7 @@ class Model:
             print(self.dataframe.info())
             
             # Guarda los nombres de las columnas en un archivo .txt y genera sugerencias
-            Model.column_names = self.dataframe.columns.tolist()#[:3]
+            Model.column_names = [self.dataframe.columns.tolist()[i] for i in (0, 1, 2, 3, 6)]
             self.save_column_names(self.column_names)
             self.suggestions()
 
@@ -94,7 +95,7 @@ class Model:
         print("> Model -> Generando nuevas Sugerencias: START", end = " ")
 
         # Inicializar el DataFrame original con todas las filas
-        filtered_df = self.dataframe
+        filtered_df = self.dataframe[self.column_names]
 
         # Aplicar el filtro solo si el valor ingresado pertenece a las sugerencias existentes
         for column, value in zip(self.column_names, search_bar_values):
@@ -147,3 +148,9 @@ class Model:
 
     def print_value(self, column, value): # Método para imprimir el valor.
         print("> Model -> Resultados de la busqueda", column, ":\n", value, "\n")
+    
+    def generate_pdf(self, result, output_path):
+        # Filtrar el DataFrame
+        filtro = self.dataframe[self.column_names].apply(lambda x: x.astype(str).isin(result)).all(axis=1)
+        data = self.dataframe[filtro]
+        generate_pdf(data, output_path)

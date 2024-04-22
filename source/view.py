@@ -7,9 +7,11 @@ La clase Interface se encarga de crear una instancia de la clase View y del cont
 #-----------------------------------------
 # LIBRERIAS
 #-----------------------------------------
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QLineEdit, QPushButton, QCompleter, QLineEdit
+import sys
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QLineEdit, QPushButton, QCompleter, QLineEdit, QDialog, QLabel, QGridLayout
 from PyQt6.QtGui import QIcon # Importa la clase QIcon desde PyQt6.QtGui
 from PyQt6.QtCore import Qt, pyqtSignal
+import os
 from source.controller import Controller  # Importamos el controlador
 
 #-----------------------------------------
@@ -24,7 +26,6 @@ class View(QMainWindow):
 
         super().__init__()
         self.setWindowTitle("Buscador")
-        # Asigna un tamaño específico a la ventana
         self.initUI()
     
     def initUI(self):
@@ -34,10 +35,7 @@ class View(QMainWindow):
         icon_path = "resources/images/icono-ink.ico"  # Ruta de la imagen del icono
         self.setWindowIcon(QIcon(icon_path)) # Configura el icono de la ventana
         self.setupLayout()  # Configura el diseño de la interfaz
-
-        search_bar_names = self.readSearchBarNamesFromFile("resources/data/column_names.txt")
-        height_size = 35 * (1 + len(search_bar_names))
-        self.setFixedSize(300, height_size)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
+  
 
     def setupLayout(self):
         print("> View -> Configurando Ventana: START")
@@ -54,6 +52,10 @@ class View(QMainWindow):
             self.setupSearchBar(column)
 
         self.setupSearchButton()  # Configura el botón de búsqueda
+        self.setupPdfButton() # Configura el botón para generar PDF
+
+        height_size = 35 * (1 + len(search_bar_names))
+        self.setFixedSize(300, height_size)  # Asigna un ancho de 400 píxeles y una altura de 300 píxeles
         
         print("> View -> Configurando Ventana: [OK]")
 
@@ -123,6 +125,43 @@ class View(QMainWindow):
             }
             """
         )
+    def setupPdfButton(self):
+        print("> View -> Configurando Boton de Generar PDF: START", end = " ")
+
+        # Configura el botón de generar PDF
+        self.pdf_button = QPushButton("Generar PDF")  # Crea un botón de generar PDF con el texto "Generar PDF"
+
+        # Añade un icono al botón
+        #pdf_icon = QIcon("ruta/al/icono.pdf")  # Reemplaza "ruta/al/icono.pdf" con la ruta de tu icono
+        #self.pdf_button.setIcon(pdf_icon)
+        self.set_pdf_button_style()
+
+        self.vertical_layout.addWidget(self.pdf_button)  # Añade el botón de generar PDF al layout vertical
+        print("~ [OK]")
+
+    def set_pdf_button_style(self):
+        # Definimos el estilo del botón con esquinas redondeadas
+     self.pdf_button.setStyleSheet(
+            """
+            QPushButton {
+                border-radius: 10px;  /* Establece las esquinas redondeadas */
+                background-color: #FF5733;  /* Color de fondo */
+                color: white;  /* Color del texto */
+                padding: 5px 5px;  /* Relleno interno */
+                min-width: 100px;  /* Ancho mínimo del botón */
+                max-width: 100px;  /* Ancho máximo del botón */
+            }
+            QPushButton:hover {
+                background-color: #E64A19;  /* Color de fondo cuando se pasa el cursor sobre el botón */
+            }
+            QPushButton:pressed {
+                background-color: #BF360C;  /* Color de fondo cuando se presiona el botón */
+            }
+            QPushButton:disabled {
+                background-color: #CCCCCC;  /* Color de fondo cuando el botón está deshabilitado (gris) */
+            }   
+            """
+        )
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Return:
@@ -140,6 +179,60 @@ class View(QMainWindow):
                 completer = QCompleter(suggestions, search_bar)
                 search_bar.setCompleter(completer)
     
+    def show_result_window(self):
+        # Crear una instancia de la ventana emergente y mostrarla
+        popup_window = ResultWindow()
+        popup_window.exec()
+
+        search_bar_names = self.readSearchBarNamesFromFile("resources/data/column_names.txt")
+
+        for column in search_bar_names:
+            search_bar = getattr(self, f"search_{column.lower()}_bar")
+            search_bar.clear()
+            search_bar.setReadOnly(False)
+            self.set_search_bar_style(search_bar)
+    
+class ResultWindow(QDialog):
+    def __init__(self):
+        # Constructor de la clase ResultWindow
+        print("\n>> Iniciando Vista - ResultWindow ----->")
+
+        super().__init__()
+
+        self.setWindowTitle("Resultado")
+        self.initUI()
+
+    
+    def initUI(self):
+        # Inicializa la ventana de resultados
+        print("> ResultWindow -> Iniciando Interfaz")
+
+        icon_path = "resources/images/icono-ink.ico"  # Ruta de la imagen del icono
+        self.setWindowIcon(QIcon(icon_path)) # Configura el icono de la ventana
+        self.setupLayout()  # Configura el diseño de la interfaz
+
+    def setupLayout(self):
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        self.etiqueta_mensaje = QLabel("Molde encontrado")
+        layout.addWidget(self.etiqueta_mensaje)
+
+        boton_abrir_pdf = QPushButton("Abrir PDF")
+        boton_abrir_pdf.clicked.connect(self.open_pdf)
+        layout.addWidget(boton_abrir_pdf)
+
+    def open_pdf(self):
+        ruta_pdf = os.path.join("resources", "pdf", "output.pdf")
+        if os.path.exists(ruta_pdf):
+            print("El archivo existe en la ruta especificada.")
+            os.startfile(ruta_pdf)  # Abre el PDF con el programa predeterminado asociado en Windows
+        else:
+            print("El archivo no existe en la ruta especificada.")
+        
+
+        self.accept()  # Cerrar la ventana emergente después de abrir el PDF
+
 
 class Interface:
     def __init__(self):
